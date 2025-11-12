@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import './App.css';
 import { DropdownVariant } from './components/DropDownVariant/DropDownVariant';
-import { data } from './lib/prepareData';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { data, monthTicks } from './lib/prepareData';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import dayjs from 'dayjs';
 
 export type VariantMenuItem = {
   id: number;
@@ -35,7 +36,6 @@ function App() {
         <LineChart
           style={{
             width: '100%',
-            maxWidth: '700px',
             height: '100%',
             maxHeight: '70vh',
             aspectRatio: 1.618,
@@ -50,27 +50,31 @@ function App() {
           }}
         >
           <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='date' />
           <YAxis width='auto' />
+          <XAxis
+            dataKey='date'
+            interval='preserveEnd'
+            type='category'
+            ticks={monthTicks}
+            tick={{ transform: 'translate(20, 0)' }}
+            tickFormatter={(value) => dayjs(value).format('MMM')}
+          />
           <Tooltip />
-          <Legend />
           {variantMenuItems
             .filter((item) => {
               if (selectedVariant?.name === 'All variations') {
                 return true;
               } else return item.name === selectedVariant?.name;
             })
-            .map((item) => {
-              console.log('🚀 ~ App ~ item:', item);
-              return (
-                <Line
-                  key={item.id}
-                  type='monotone'
-                  dataKey={item.name}
-                  stroke={item.stroke}
-                />
-              );
-            })}
+            .map((item) => (
+              <Line
+                key={item.id}
+                type='monotone'
+                dot={false}
+                dataKey={item.name}
+                stroke={item.stroke}
+              />
+            ))}
         </LineChart>
       </main>
     </>

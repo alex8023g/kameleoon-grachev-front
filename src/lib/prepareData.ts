@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import json from '../data/data.json';
 
 export type VariationId = 0 | 10001 | 10002 | 10003;
@@ -22,11 +23,17 @@ console.log('🚀 ~ App ~ variations:', variations);
 const dataProto = json.data as Data[];
 
 // export const data: { date: string; rates: { [key: string]: number } }[] = [];
-export const data: { [key: string]: number }[] = [];
+export type ChartDataItem = {
+  date: string;
+  dateFormatted: string;
+} & Record<string, number | string>;
+
+export const data: ChartDataItem[] = [];
 
 dataProto.forEach((item) => {
   const dataItem = {
     date: item.date,
+    dateFormatted: dayjs(item.date).format('DD/MM/YYYY'),
     ...Object.fromEntries(
       Object.entries(item.conversions).map(([key, value]) => [
         variations.find((variation) => variation.id === (Number(key) as VariationId))
@@ -39,3 +46,15 @@ dataProto.forEach((item) => {
   };
   data.push(dataItem);
 });
+
+export const monthTicks = (() => {
+  const seen = new Set<string>();
+  return data.reduce<string[]>((acc, item) => {
+    const monthKey = dayjs(item.date).format('YYYY-MM');
+    if (!seen.has(monthKey)) {
+      seen.add(monthKey);
+      acc.push(item.date);
+    }
+    return acc;
+  }, []);
+})();
