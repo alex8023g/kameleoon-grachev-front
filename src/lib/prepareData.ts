@@ -21,12 +21,13 @@ console.log('🚀 ~ App ~ variations:', variations);
 
 const dataProto = json.data as Data[];
 
-export const data: { date: string; rates: { [key: string]: number } }[] = [];
+// export const data: { date: string; rates: { [key: string]: number } }[] = [];
+export const data: { [key: string]: number }[] = [];
 
 dataProto.forEach((item) => {
   const dataItem = {
     date: item.date,
-    rates: Object.fromEntries(
+    ...Object.fromEntries(
       Object.entries(item.conversions).map(([key, value]) => [
         variations.find((variation) => variation.id === (Number(key) as VariationId))
           ?.name,
