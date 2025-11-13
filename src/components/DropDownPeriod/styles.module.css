@@ -1,5 +1,5 @@
 .Content {
-  min-width: 170px;
+  min-width: 70px;
   background-color: white;
   border-radius: 6px;
   padding: 5px;
@@ -62,8 +62,7 @@
   all: unset;
   font-family: inherit;
   height: 28px;
-  width: 161px;
-  margin-right: 8px;
+  width: 59px;
   padding: 0 10px;
   display: inline-flex;
   align-items: center;

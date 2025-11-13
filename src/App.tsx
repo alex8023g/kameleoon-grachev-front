@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import './App.css';
 import { DropdownVariant } from './components/DropDownVariant/DropDownVariant';
-import { data, monthTicks } from './lib/prepareData';
+import { prepareData, type Data } from './lib/prepareData';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import dayjs from 'dayjs';
+import { DropdownPeriod } from './components/DropDownPeriod/DropDownPeriod';
 
 export type VariantMenuItem = {
   id: number;
   name: string;
   stroke: string;
 };
+
+const { dataPerDay, monthTicks, dataPerWeek, weekTicks } = prepareData();
 
 const variantMenuItems: VariantMenuItem[] = [
   { id: 1, name: 'All variations', stroke: '' },
@@ -19,10 +22,16 @@ const variantMenuItems: VariantMenuItem[] = [
   { id: 5, name: 'Variation C', stroke: 'red' },
 ];
 
+export type PeriodMenuItem = 'day' | 'week';
+
+const periodMenuItems: PeriodMenuItem[] = ['day', 'week'];
+
 function App() {
   const [selectedVariant, setSelectedVariant] = useState<VariantMenuItem>(
     variantMenuItems[0]
   );
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodMenuItem>('day');
+  const [data, setData] = useState<Data[]>(dataPerDay);
   return (
     <>
       <header>
@@ -30,6 +39,14 @@ function App() {
           selectedVariant={selectedVariant}
           setSelectedVariant={setSelectedVariant}
           variantMenuItems={variantMenuItems}
+        />
+        <DropdownPeriod
+          dataPerDay={dataPerDay}
+          dataPerWeek={dataPerWeek}
+          selectedPeriod={selectedPeriod}
+          setSelectedPeriod={setSelectedPeriod}
+          setData={setData}
+          periodMenuItems={periodMenuItems}
         />
       </header>
       <main>
@@ -55,9 +72,11 @@ function App() {
             dataKey='date'
             interval='preserveEnd'
             type='category'
-            ticks={monthTicks}
+            ticks={selectedPeriod === 'day' ? monthTicks : weekTicks}
             tick={{ transform: 'translate(20, 0)' }}
-            tickFormatter={(value) => dayjs(value).format('MMM')}
+            tickFormatter={(value) =>
+              selectedPeriod === 'day' ? dayjs(value).format('MMM') : value
+            }
           />
           <Tooltip />
           {variantMenuItems

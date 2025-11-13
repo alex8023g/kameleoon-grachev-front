@@ -1,44 +1,53 @@
 import { DropdownMenu } from 'radix-ui';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import styles from './styles.module.css';
-import type { VariantMenuItem } from '../../App';
+import type { PeriodMenuItem } from '../../App';
+import type { Data } from '../../lib/prepareData';
 
-export function DropdownVariant({
-  selectedVariant,
-  setSelectedVariant,
-  variantMenuItems,
+export function DropdownPeriod({
+  dataPerDay,
+  dataPerWeek,
+  selectedPeriod,
+  setSelectedPeriod,
+  setData,
+  periodMenuItems,
 }: {
-  selectedVariant: VariantMenuItem;
-  setSelectedVariant: (variant: VariantMenuItem) => void;
-  variantMenuItems: VariantMenuItem[];
+  dataPerDay: Data[];
+  dataPerWeek: Data[];
+  selectedPeriod: PeriodMenuItem;
+  setSelectedPeriod: (period: PeriodMenuItem) => void;
+  setData: (data: Data[]) => void;
+  periodMenuItems: PeriodMenuItem[];
 }) {
+  // const [selectedPeriod, setSelectedPeriod] = useState<PeriodMenuItem>('day');
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button className={styles.TriggerButton} aria-label='Customise options'>
-          {selectedVariant?.name}
+          {selectedPeriod}
           <ChevronDownIcon />
         </button>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content className={styles.Content} sideOffset={1} align='start'>
-          {variantMenuItems.map((item) => (
+          {periodMenuItems.map((item) => (
             <DropdownMenu.Item
-              key={item.id}
+              key={item}
               className={styles.Item}
               onSelect={(event: Event) => {
                 const value = (event.target as HTMLButtonElement).textContent;
-                console.log('🚀 ~ DropdownVariant ~ value:', value);
+
                 if (value) {
-                  setSelectedVariant(
-                    variantMenuItems.find((item) => item.name === value) ||
-                      variantMenuItems[0]
+                  setSelectedPeriod(
+                    periodMenuItems.find((item) => item === value) || periodMenuItems[0]
                   );
+                  setData(value === 'day' ? dataPerDay : dataPerWeek);
                 }
               }}
             >
-              {item.name}
+              {item}
             </DropdownMenu.Item>
           ))}
         </DropdownMenu.Content>
