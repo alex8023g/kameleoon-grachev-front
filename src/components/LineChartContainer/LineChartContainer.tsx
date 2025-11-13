@@ -2,6 +2,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import type { Data } from '../../lib/prepareData';
 import type { LineStyleMenuItem, PeriodMenuItem, VariantMenuItem } from '../../App';
 import dayjs from 'dayjs';
+import { CustomTooltip } from '../CustomTooltip/CustomTooltip';
 
 export function LineChartContainer({
   data,
@@ -37,7 +38,7 @@ export function LineChartContainer({
         bottom: 5,
       }}
     >
-      <CartesianGrid strokeDasharray='3 3' />
+      <CartesianGrid strokeDasharray='3 3' horizontal={false} />
       <YAxis width='auto' tickFormatter={(value) => `${value}%`} />
       <XAxis
         dataKey='date'
@@ -49,7 +50,7 @@ export function LineChartContainer({
           selectedPeriod === 'day' ? dayjs(value).format('MMM') : value
         }
       />
-      <Tooltip />
+      <Tooltip content={CustomTooltip} cursor={{ fill: 'transparent' }} />
       {variantMenuItems
         .filter((item) => {
           if (selectedVariant?.name === 'All variations') {

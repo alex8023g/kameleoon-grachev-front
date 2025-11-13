@@ -2,6 +2,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, AreaChart, Area } from 'recharts'
 import type { Data } from '../../lib/prepareData';
 import type { PeriodMenuItem, VariantMenuItem } from '../../App';
 import dayjs from 'dayjs';
+import { CustomTooltip } from '../CustomTooltip/CustomTooltip';
 
 export function AreaChartContainer({
   data,
@@ -47,7 +48,7 @@ export function AreaChartContainer({
           selectedPeriod === 'day' ? dayjs(value).format('MMM') : value
         }
       />
-      <Tooltip />
+      <Tooltip content={CustomTooltip} cursor={{ fill: 'transparent' }} />
       {variantMenuItems
         .filter((item) => {
           if (selectedVariant?.name === 'All variations') {
