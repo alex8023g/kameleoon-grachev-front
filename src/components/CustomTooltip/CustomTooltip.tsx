@@ -21,7 +21,7 @@ export function CustomTooltip({
           </span>
         </div>
         <div>
-          {payload.map((pld, index, array) => {
+          {payload.map((pld, _, array) => {
             return (
               <div className={styles.payloadItem}>
                 <div
