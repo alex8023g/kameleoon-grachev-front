@@ -2,6 +2,7 @@ import type { VariantMenuItem } from '../../App';
 import type { PeriodMenuItem } from '../../App';
 import type { LineStyleMenuItem } from '../../App';
 import type { Data } from '../../lib/prepareData';
+import { DownLoadBtn } from '../DownLoadBtn/DownLoadBtn';
 import { DropdownLineStyle } from '../DropDownLineStyle/DropDownLineStyle';
 import { DropdownPeriod } from '../DropDownPeriod/DropDownPeriod';
 import { DropdownVariant } from '../DropDownVariant/DropDownVariant';
@@ -21,6 +22,8 @@ export function Header({
   selectedLineStyle,
   setSelectedLineStyle,
   lineStyleMenuItems,
+  getPng,
+  isLoading,
 }: {
   selectedVariant: VariantMenuItem;
   setSelectedVariant: (variant: VariantMenuItem) => void;
@@ -34,6 +37,8 @@ export function Header({
   selectedLineStyle: LineStyleMenuItem;
   setSelectedLineStyle: (lineStyle: LineStyleMenuItem) => void;
   lineStyleMenuItems: LineStyleMenuItem[];
+  getPng: (callback?: BlobCallback) => Promise<string | undefined>;
+  isLoading: boolean;
 }) {
   return (
     <header>
@@ -60,6 +65,7 @@ export function Header({
               setSelectedLineStyle={setSelectedLineStyle}
               lineStyleMenuItems={lineStyleMenuItems}
             />
+            <DownLoadBtn getPng={getPng} isLoading={isLoading} />
           </div>
         </div>
       </Layout>

@@ -5,6 +5,7 @@ import { Layout } from './components/Layout/Layout';
 import { LineChartContainer } from './components/LineChartContainer/LineChartContainer';
 import { AreaChartContainer } from './components/AreaChartContainer/AreaChartContainer';
 import { Header } from './components/Header/Header';
+import { useCurrentPng } from 'recharts-to-png';
 
 export type VariantMenuItem = {
   id: number;
@@ -38,6 +39,7 @@ function App() {
   const [data, setData] = useState<Data[]>(dataPerDay);
   const [selectedLineStyle, setSelectedLineStyle] =
     useState<LineStyleMenuItem>('monotone');
+  const [getPng, { ref, isLoading }] = useCurrentPng();
   return (
     <>
       <Header
@@ -53,9 +55,11 @@ function App() {
         selectedLineStyle={selectedLineStyle}
         setSelectedLineStyle={setSelectedLineStyle}
         lineStyleMenuItems={lineStyleMenuItems}
+        getPng={getPng}
+        isLoading={isLoading}
       />
       <main>
-        <Layout>
+        <Layout ref={ref}>
           {selectedLineStyle === 'area' ? (
             <AreaChartContainer
               data={data}
