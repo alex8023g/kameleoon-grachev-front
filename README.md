@@ -6,6 +6,7 @@ Rechats https://github.com/recharts/recharts
 
 - select variant
 - select period
+- line style selector
 
 # Local setup instructions
 

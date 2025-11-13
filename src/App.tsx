@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import './App.css';
-import { DropdownVariant } from './components/DropDownVariant/DropDownVariant';
 import { prepareData, type Data } from './lib/prepareData';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
-import dayjs from 'dayjs';
-import { DropdownPeriod } from './components/DropDownPeriod/DropDownPeriod';
+import { Layout } from './components/Layout/Layout';
+import { LineChartContainer } from './components/LineChartContainer/LineChartContainer';
+import { AreaChartContainer } from './components/AreaChartContainer/AreaChartContainer';
+import { Header } from './components/Header/Header';
 
 export type VariantMenuItem = {
   id: number;
@@ -26,75 +26,57 @@ export type PeriodMenuItem = 'day' | 'week';
 
 const periodMenuItems: PeriodMenuItem[] = ['day', 'week'];
 
+export type LineStyleMenuItem = 'linear' | 'monotone' | 'area';
+
+const lineStyleMenuItems: LineStyleMenuItem[] = ['linear', 'monotone', 'area'];
+
 function App() {
   const [selectedVariant, setSelectedVariant] = useState<VariantMenuItem>(
     variantMenuItems[0]
   );
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodMenuItem>('day');
   const [data, setData] = useState<Data[]>(dataPerDay);
+  const [selectedLineStyle, setSelectedLineStyle] =
+    useState<LineStyleMenuItem>('monotone');
   return (
     <>
-      <header>
-        <DropdownVariant
-          selectedVariant={selectedVariant}
-          setSelectedVariant={setSelectedVariant}
-          variantMenuItems={variantMenuItems}
-        />
-        <DropdownPeriod
-          dataPerDay={dataPerDay}
-          dataPerWeek={dataPerWeek}
-          selectedPeriod={selectedPeriod}
-          setSelectedPeriod={setSelectedPeriod}
-          setData={setData}
-          periodMenuItems={periodMenuItems}
-        />
-      </header>
+      <Header
+        selectedVariant={selectedVariant}
+        setSelectedVariant={setSelectedVariant}
+        variantMenuItems={variantMenuItems}
+        dataPerDay={dataPerDay}
+        dataPerWeek={dataPerWeek}
+        selectedPeriod={selectedPeriod}
+        setSelectedPeriod={setSelectedPeriod}
+        setData={setData}
+        periodMenuItems={periodMenuItems}
+        selectedLineStyle={selectedLineStyle}
+        setSelectedLineStyle={setSelectedLineStyle}
+        lineStyleMenuItems={lineStyleMenuItems}
+      />
       <main>
-        <LineChart
-          style={{
-            width: '100%',
-            height: '100%',
-            maxHeight: '70vh',
-            aspectRatio: 1.618,
-          }}
-          responsive
-          data={data}
-          margin={{
-            top: 5,
-            right: 0,
-            left: 0,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray='3 3' />
-          <YAxis width='auto' />
-          <XAxis
-            dataKey='date'
-            interval='preserveEnd'
-            type='category'
-            ticks={selectedPeriod === 'day' ? monthTicks : weekTicks}
-            tick={{ transform: 'translate(20, 0)' }}
-            tickFormatter={(value) =>
-              selectedPeriod === 'day' ? dayjs(value).format('MMM') : value
-            }
-          />
-          <Tooltip />
-          {variantMenuItems
-            .filter((item) => {
-              if (selectedVariant?.name === 'All variations') {
-                return true;
-              } else return item.name === selectedVariant?.name;
-            })
-            .map((item) => (
-              <Line
-                key={item.id}
-                type='monotone'
-                dot={false}
-                dataKey={item.name}
-                stroke={item.stroke}
-              />
-            ))}
-        </LineChart>
+        <Layout>
+          {selectedLineStyle === 'area' ? (
+            <AreaChartContainer
+              data={data}
+              selectedPeriod={selectedPeriod}
+              monthTicks={monthTicks}
+              weekTicks={weekTicks}
+              variantMenuItems={variantMenuItems}
+              selectedVariant={selectedVariant}
+            />
+          ) : (
+            <LineChartContainer
+              data={data}
+              selectedPeriod={selectedPeriod}
+              monthTicks={monthTicks}
+              weekTicks={weekTicks}
+              variantMenuItems={variantMenuItems}
+              selectedVariant={selectedVariant}
+              selectedLineStyle={selectedLineStyle}
+            />
+          )}
+        </Layout>
       </main>
     </>
   );
