@@ -7,6 +7,7 @@ Rechats https://github.com/recharts/recharts
 - select variant
 - select period
 - line style selector
+- download png
 
 # Local setup instructions
 
